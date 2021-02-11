@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+   <head>
+       <title>Gleditor</title>
+        <script src="https://kit.fontawesome.com/a7124fc530.js" crossorigin="anonymous"></script>
+        <script type='text/javascript' src='index.js' defer></script>
+        <link rel="stylesheet" href="style.css">
+   </head>
+   <body>
+        <div class='container'>
+            <div class='project-title'>
+                <input value='untitled' placeholder='Untitled'>
+            </div>
+            <div class='container-2'>
+                <div class='interface'>
+                    <div class='tools'>
+                        <form enctype="multipart/form-data">
+                            <label class="file-label" for='file'>Load project</label>
+                            <input type="file" id="file">
+                        </form>
+                        <button class='save-button'>save project</button>
+                    </div>
+                    <div class='tools'>
+                        <h3 class='tools-title'>Shapes</h3>
+                        <ul class='shapes'>
+                            <li class='shape'>
+                                <div class='tooltip'>square</div>
+                                <div class='square'></div>
+                            </li>
+                            <li class='shape'>
+                                <div class='tooltip'>triangle</div>
+                                <div class='triangle'></div>
+                            </li>
+                            <li class='shape'>
+                                <div class='tooltip'>line</div>
+                                <div class='line'></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class='tools'>
+                        <h3 class='tools-title'>Colors</h3>
+                        <ul class='colors'>
+                            <li class='color' style='background-color: #000000'>
+                                <div class='tooltip'>Black</div>
+                            </li>
+                            <li class='color' style='background-color: grey'>
+                                <div class='tooltip'>Gray-50%</div>
+                            </li>
+                            <li class='color' style='background-color: rgb(99, 3, 3)'>
+                                <div class='tooltip'>Dark red</div>
+                            </li>
+                            <li class='color' style='background-color: red'>
+                                <div class='tooltip'>Red</div>
+                            </li>
+                            <li class='color' style='background-color: orange'>
+                                <div class='tooltip'>Orange</div>
+                            </li>
+                            <li class='color' style='background-color: yellow'>
+                                <div class='tooltip'>Yellow</div>
+                            </li>
+                            <li class='color' style='background-color: green'>
+                                <div class='tooltip'>Green</div>
+                            </li>
+                            <li class='color' style='background-color: skyblue'>
+                                <div class='tooltip'>Sky blue</div>
+                            </li>
+                            <li class='color' style='background-color: cyan'>
+                                <div class='tooltip'>Cyan</div>
+                            </li>
+                            <li class='color' style='background-color: blue'>
+                                <div class='tooltip'>Blue</div>
+                            </li>
+                            <li class='color' style='background-color: purple'>
+                                <div class='tooltip'>Purple</div>
+                            </li>
+                            <li class='color' style='background-color: white'>
+                                <div class='tooltip'>White</div>
+                            </li>
+                            <li class='color' style='background-color: rgb(189, 189, 189)'>
+                                <div class='tooltip'>Gray-25%</div>
+                            </li>
+                            <li class='color' style='background-color: rgb(180, 102, 102)'>
+                                <div class='tooltip'>Brown</div>
+                            </li>
+                            <li class='color' style='background-color: pink'>
+                                <div class='tooltip'>Pink</div>
+                            </li>
+                            <li class='color' style='background-color: gold'>
+                                <div class='tooltip'>Gold</div>
+                            </li>
+                            <li class='color' style='background-color: lightyellow'>
+                                <div class='tooltip'>Light yellow</div>
+                            </li>
+                            <li class='color' style='background-color: lightgreen'>
+                                <div class='tooltip'>Light green</div>
+                            </li>
+                            <li class='color' style='background-color: lightblue'>
+                                <div class='tooltip'>Light blue</div>
+                            </li>
+                            <li class='color' style='background-color: rgb(100, 100, 177)'>
+                                <div class='tooltip'>Blue gray</div>
+                            </li>
+                            <li class='color' style='background-color: lavender'>
+                                <div class='tooltip'>Lavender</div>
+                            </li>            
+                        </ul>
+                    </div>
+                    <div class='tools'>
+                        <div class='help'>
+                            ?
+                            <div class='tooltip'>Help</div>
+                        </div>
+                    </div>
+                </div>
+                <canvas width='1024' height='600'></canvas>
+            </div>
+      </div>
+   </body>
+</html>
