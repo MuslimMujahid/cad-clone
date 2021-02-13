@@ -3,16 +3,90 @@ var canvas = document.querySelector('canvas');
 
 /*======= Global variables =========*/
 
-var shapes = {
-    verticeRange: [(0, 3)],
-    vertices: [
-        -0.7,-0.1,0,
-        -0.3,0.6,0,
-        -0.3,-0.3,0
-    ]
+var shapes = [
+    {
+        prevPoints: [
+            -0.5, 0.5,
+            0.5, 0.5,
+            0.5, -0.5,
+            -0.5, -0.5
+        ],
+        curPoints: [
+            -0.5, 0.5,
+            0.5, 0.5,
+            0.5, -0.5,
+            -0.5, -0.5
+        ]
+    }
+]
+
+const stateType = {
+    SELECT: 'select', // default
+    DRAWING: 'drawing', // selected a shape to draw 
+    SELECTING: 'selecting' // selected a object in canvas
+}
+
+const createSelectState = () => {
+    return {
+        type: stateType.SELECT
+    }
+}
+
+const createSelectedState = (shape) => {
+    return {
+        type: stateType.SELECTING,
+        shape: shape
+    }
+} 
+
+const createDrawingState = (shape) => {
+    return {
+        type: stateType.DRAWING,
+        shape: shape
+    }
 }
 
 /*======= Controller =========*/
+const generateCoordinatesForShader = (points) => {
+    let newPoints = []
+    const centroid = findCentroid(points)
+    // const centroid = {x: 0.189, y: 0.178}
+    console.log('centroid: ', centroid)
+
+    points.push(points[0])
+    points.push(points[1])
+    for (let i = 0; i < points.length-2; i += 2) {
+        newPoints.push(centroid.x)
+        newPoints.push(centroid.y)
+        newPoints.push(points[i])
+        newPoints.push(points[i+1])
+        newPoints.push(points[i+2])
+        newPoints.push(points[i+3])
+    }
+    return newPoints
+}
+
+const findCentroid = (points) => {
+    
+    let [xNum, yNum] = [0, 0]
+    let denom = 0
+    for (let i = 0; i < points.length-3; i += 2) {
+        let b = (points[i]*points[i+3] - points[i+2]*points[i+1])
+        xNum += (points[i]+points[i+2]) * b
+        yNum += (points[i+1]+points[i+3]) * b
+        denom += b
+    }
+
+    return {
+        x: xNum/(3*denom),
+        y: yNum/(3*denom)
+    }
+}
+
+
+const shapesJoin = () => { // return array join of array of shapes
+    return shapes.map(el => generateCoordinatesForShader(el.curPoints)).join().split(",").map(el => parseFloat(el))
+}
 
 const mapXY = (x, y, mode) => {
 
@@ -58,7 +132,7 @@ document.onclick = (e) => {
     console.log(windowP.x, windowP.y)
 }
 
-
+var shapes_join = shapesJoin();
 
 
 // webgl context
@@ -71,7 +145,7 @@ var vertex_buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
 
 // Pass the vertex data to the buffer
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(shapes.vertices), gl.STATIC_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(shapes_join), gl.STATIC_DRAW);
 
 // Unbind the buffer
 gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -80,9 +154,9 @@ gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 // Vertex shader source code
 var vertCode =
-'attribute vec3 coordinates;' +
+'attribute vec2 coordinates;' +
 'void main(void) {' +
-    ' gl_Position = vec4(coordinates, 1.0);' +
+    ' gl_Position = vec4(coordinates, 0.0, 1.0);' +
 '}';
 
 // Create a vertex shader object
@@ -134,7 +208,7 @@ gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
 var coord = gl.getAttribLocation(shaderProgram, "coordinates");
 
 // Point an attribute to the currently bound VBO
-gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
+gl.vertexAttribPointer(coord, 2, gl.FLOAT, false, 0, 0);
 
 // Enable the attribute
 gl.enableVertexAttribArray(coord);
@@ -154,7 +228,7 @@ gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 gl.viewport(0,0,canvas.width,canvas.height);
 
 // Draw the triangle
-gl.drawArrays(gl.TRIANGLES, 0, 6);
+gl.drawArrays(gl.TRIANGLES, 0, shapes_join.length*3);
 
 
 
