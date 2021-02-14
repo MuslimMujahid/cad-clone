@@ -1,9 +1,3 @@
-square = [
-    -0.5, 0.5,
-    0.5, 0.5,
-    0.5, -0.5
-]
-
 var canvas = document.querySelector('canvas');
 
 const gl = canvas.getContext('webgl');
@@ -21,11 +15,22 @@ async function main() {
     shader.attach(fragShader);
     shader.link();
 
-    // try to to draw an object
+    // try to to draw an object 
+    // do this if you want to draw an object
+    let square = [
+        -0.5, 0.5,
+        0.5, 0.5,
+        0.5, -0.5,
+        -0.5, -0.5,
+        -0.5, 0.5,
+        0.5, -0.5
+    ]
     const squareObj = new GLObject(renderer.count, shader.program, gl);
     squareObj.setVertexArray(square);
     squareObj.bind();
     renderer.addObject(squareObj);
+
+    // render all object
     renderer.render();
 }
 main();
