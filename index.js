@@ -3,8 +3,12 @@ var canvas = document.querySelector('canvas');
 
 /*======= Global variables =========*/
 
+const deepClone = (obj) => {
+    return JSON.parse(JSON.stringify(obj))
+}
+
 const point = (x, y) => {
-    return {x, y}
+    return {x: x, y: y}
 }
 
 var shapes = [
@@ -16,10 +20,16 @@ var shapes = [
             point(-0.5, -0.5)
         ],
         curPoints: [
-            point(-0.5, 0.5),
-            point(0.5, 0.5),
             point(0.5, -0.5),
-            point(-0.5, -0.5)
+            point(0.3, -0.5),
+            point(0.1, -0.3),
+            point(0.1, 0.2),
+            point(0.3, 0.4),
+            point(0.5, 0.4),
+            point(0.3, 0.2),
+            point(0.3, -0.1),
+            point(0.4, -0.2),
+            point(0.7, -0.2),
         ]
     }
 ]
@@ -53,43 +63,41 @@ const createDrawingState = (shape) => {
 /*======= Controller =========*/
 const generateCoordinatesForShader = (points) => {
     let newPoints = []
-    const centroid = findCentroid(points)
-    // const centroid = {x: 0.189, y: 0.178}
-    console.log('centroid: ', centroid)
 
-    points.push(points[0])
-    points.push(points[1])
     for (let i = 0; i < points.length-1; i += 1) {
-        newPoints.push(centroid.x)
-        newPoints.push(centroid.y)
-        newPoints.push(points[i].x)
-        newPoints.push(points[i].y)
-        newPoints.push(points[i+1].x)
-        newPoints.push(points[i+1].y)
+        if (i+1 == points.length-i-1) continue
+            
+
+        let triangle = [points[i], points[i+1], points[points.length-i-1]]
+        let centroindTriangle = findCentroidOfTriangle(deepClone(triangle))
+        console.log(triangle, centroindTriangle)
+
+        triangle.push(triangle[0])
+        for (let j = 0; j < triangle.length-1; j += 1) {
+            newPoints.push(centroindTriangle.x)
+            newPoints.push(centroindTriangle.y)
+            newPoints.push(triangle[j].x)
+            newPoints.push(triangle[j].y)
+            newPoints.push(triangle[j+1].x)
+            newPoints.push(triangle[j+1].y)
+        }
     }
+    console.log(newPoints)
     return newPoints
 }
 
-const findCentroid = (points) => {
-    
-    let [xNum, yNum] = [0, 0]
-    let denom = 0
-    for (let i = 0; i < points.length-1; i += 1) {
-        let b = (points[i].x*points[i+1].y - points[i+1].x*points[i].y)
-        xNum += (points[i].x+points[i+1].x) * b
-        yNum += (points[i].y+points[i+1].y) * b
-        denom += b
-    }
+const findCentroidOfTriangle = (points) => {
 
     return {
-        x: xNum/(3*denom),
-        y: yNum/(3*denom)
+        x: (points[0].x + points[1].x + points[2].x)/3,
+        y: (points[0].y + points[1].y + points[2].y)/3
     }
 }
 
 
 const shapesJoin = () => { // return array join of array of shapes
-    return shapes.map(el => generateCoordinatesForShader(el.curPoints)).join().split(",").map(el => parseFloat(el))
+    const shapes_join = shapes.map(el => generateCoordinatesForShader(el.curPoints)).join().split(",").map(el => parseFloat(el))
+    return shapes_join
 }
 
 const mapValue = (value, min1, max1, min2, max2) => {
@@ -211,7 +219,7 @@ gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 gl.viewport(0,0,canvas.width,canvas.height);
 
 // Draw the triangle
-gl.drawArrays(gl.TRIANGLES, 0, shapes_join.length*3);
+gl.drawArrays(gl.TRIANGLES, 0, 100);
 
 
 
