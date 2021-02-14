@@ -22,11 +22,9 @@ async function main() {
         0.5, 0.5,
         0.5, -0.5,
         -0.5, -0.5,
-        -0.5, 0.5,
-        0.5, -0.5
     ]
     const squareObj = new GLObject(renderer.count, shader.program, gl);
-    squareObj.setVertexArray(square);
+    squareObj.setVertexArray(polygonTriangularity(square));
     squareObj.bind();
     renderer.addObject(squareObj);
 
