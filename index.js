@@ -251,6 +251,11 @@ function replaceShape(index, newShapeArray) {
     drawAll();
 }
 
+function changeSquareSize(index, size) {
+    newSquare = shapeItems[index];
+    newSquare.size = size;
+    replaceShape(index, newSquare);
+}
 
 var triangle1 = {
     type: 'triangle',
@@ -272,3 +277,5 @@ shapeItems.push(triangle1);
 shapeItems.push(square1);
 
 drawAll();
+
+changeSquareSize(2, 0.6);
