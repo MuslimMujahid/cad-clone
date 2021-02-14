@@ -3,19 +3,23 @@ var canvas = document.querySelector('canvas');
 
 /*======= Global variables =========*/
 
+const point = (x, y) => {
+    return {x, y}
+}
+
 var shapes = [
     {
         prevPoints: [
-            -0.5, 0.5,
-            0.5, 0.5,
-            0.5, -0.5,
-            -0.5, -0.5
+            point(-0.5, 0.5),
+            point(0.5, 0.5),
+            point(0.5, -0.5),
+            point(-0.5, -0.5)
         ],
         curPoints: [
-            -0.5, 0.5,
-            0.5, 0.5,
-            0.5, -0.5,
-            -0.5, -0.5
+            point(-0.5, 0.5),
+            point(0.5, 0.5),
+            point(0.5, -0.5),
+            point(-0.5, -0.5)
         ]
     }
 ]
@@ -55,13 +59,13 @@ const generateCoordinatesForShader = (points) => {
 
     points.push(points[0])
     points.push(points[1])
-    for (let i = 0; i < points.length-2; i += 2) {
+    for (let i = 0; i < points.length-1; i += 1) {
         newPoints.push(centroid.x)
         newPoints.push(centroid.y)
-        newPoints.push(points[i])
-        newPoints.push(points[i+1])
-        newPoints.push(points[i+2])
-        newPoints.push(points[i+3])
+        newPoints.push(points[i].x)
+        newPoints.push(points[i].y)
+        newPoints.push(points[i+1].x)
+        newPoints.push(points[i+1].y)
     }
     return newPoints
 }
@@ -70,10 +74,10 @@ const findCentroid = (points) => {
     
     let [xNum, yNum] = [0, 0]
     let denom = 0
-    for (let i = 0; i < points.length-3; i += 2) {
-        let b = (points[i]*points[i+3] - points[i+2]*points[i+1])
-        xNum += (points[i]+points[i+2]) * b
-        yNum += (points[i+1]+points[i+3]) * b
+    for (let i = 0; i < points.length-1; i += 1) {
+        let b = (points[i].x*points[i+1].y - points[i+1].x*points[i].y)
+        xNum += (points[i].x+points[i+1].x) * b
+        yNum += (points[i].y+points[i+1].y) * b
         denom += b
     }
 
@@ -88,32 +92,14 @@ const shapesJoin = () => { // return array join of array of shapes
     return shapes.map(el => generateCoordinatesForShader(el.curPoints)).join().split(",").map(el => parseFloat(el))
 }
 
-const mapXY = (x, y, mode) => {
+const mapValue = (value, min1, max1, min2, max2) => {
 
-    const Canvas = canvas.getBoundingClientRect()
-    if (mode === 'to webgl') {
-        const glX = (x-Canvas.left)*100/Canvas.width
-        const glY = (Canvas.height-(y-Canvas.top))*100/Canvas.height
-
-        return {
-            x: glX,
-            y: glY
-        }
-    } else if (mode === 'to window') {
-        const windowX = (Canvas.width*x/100) + Canvas.left
-        const windowY = Canvas.height + Canvas.top - (Canvas.height*y/100)
-    
-        return {
-            x: windowX,
-            y: windowY
-        }
-    }
+    return (value*(max2-min2) - max2*min1 + min2*max1)/(max1-min1)
 }
 
 document.onclick = (e) => {
-    const Canvas = document
-        .querySelector('canvas')
-        .getBoundingClientRect()
+    const Canvas = document.querySelector('canvas').getBoundingClientRect()
+    const Body = document.querySelector('body').getBoundingClientRect()
     
     // only cintinue if mouse click performed in the canvas
     if (!(e.clientX >= Canvas.left &&
@@ -126,10 +112,7 @@ document.onclick = (e) => {
     }
 
     console.log(e.clientX, e.clientY)
-    const glP = mapXY(e.clientX, e.clientY, 'to webgl')
-    console.log(glP.x, glP.y)
-    const windowP = mapXY(glP.x, glP.y, 'to window')
-    console.log(windowP.x, windowP.y)
+    console.log(mapValue(e.clientX, Canvas.left, Canvas.right, 0, 1), mapValue(e.clientY, Canvas.bottom, Canvas.top, 0, 1))
 }
 
 var shapes_join = shapesJoin();
