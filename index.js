@@ -65,33 +65,16 @@ const generateCoordinatesForShader = (points) => {
     let newPoints = []
 
     for (let i = 0; i < points.length-1; i += 1) {
+        
         if (i+1 == points.length-i-1) continue
             
-
         let triangle = [points[i], points[i+1], points[points.length-i-1]]
-        let centroindTriangle = findCentroidOfTriangle(deepClone(triangle))
-        console.log(triangle, centroindTriangle)
-
-        triangle.push(triangle[0])
-        for (let j = 0; j < triangle.length-1; j += 1) {
-            newPoints.push(centroindTriangle.x)
-            newPoints.push(centroindTriangle.y)
+        for (let j = 0; j < triangle.length; j++) {
             newPoints.push(triangle[j].x)
             newPoints.push(triangle[j].y)
-            newPoints.push(triangle[j+1].x)
-            newPoints.push(triangle[j+1].y)
         }
     }
-    console.log(newPoints)
     return newPoints
-}
-
-const findCentroidOfTriangle = (points) => {
-
-    return {
-        x: (points[0].x + points[1].x + points[2].x)/3,
-        y: (points[0].y + points[1].y + points[2].y)/3
-    }
 }
 
 
