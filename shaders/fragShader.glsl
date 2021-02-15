@@ -1,4 +1,6 @@
-void main(void) {
-    gl_FragColor = vec4(0.0, 0.0, 0.0, .2);
-}
+precision mediump float;
+uniform vec4 fColor;  
 
+void main() {
+    gl_FragColor = fColor;
+}

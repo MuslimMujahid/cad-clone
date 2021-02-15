@@ -25,6 +25,7 @@ async function main() {
     ]
     const squareObj = new GLObject(renderer.count, shader.program, gl);
     squareObj.setVertexArray(polygonTriangularity(square));
+    squareObj.setColor(1,0.5,0,1);
     squareObj.bind();
     renderer.addObject(squareObj);
 
