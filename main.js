@@ -15,19 +15,23 @@ async function main() {
     shader.attach(fragShader);
     shader.link();
 
-    // try to to draw an object 
+    // try to to draw an object
     // do this if you want to draw an object
-    let square = [
-        -0.5, 0.5,
-        0.5, 0.5,
-        0.5, -0.5,
-        -0.5, -0.5,
+    let fiveSided = [
+        -0.2, 0.2,
+        0.1, 0.5,
+        0.2, 0.2,
+        0.2, -0.2,
+        -0.2, -0.2,
     ]
-    const squareObj = new GLObject(renderer.count, shader.program, gl);
-    squareObj.setVertexArray(polygonTriangularity(square));
-    squareObj.setColor(1,0.5,0,1);
-    squareObj.bind();
-    renderer.addObject(squareObj);
+    const fiveSidedObj = new GLObject(renderer.count, shader.program, gl);
+    fiveSidedObj.setVertexArray(polygonTriangularity(fiveSided));
+    fiveSidedObj.translate(0.4, 0.1);
+    fiveSidedObj.scale(0.3);
+    fiveSidedObj.rotate(30);
+    fiveSidedObj.setColor(1,0.1,0,1);
+    fiveSidedObj.bind();
+    renderer.addObject(fiveSidedObj);
 
     // render all object
     renderer.render();
