@@ -6,7 +6,7 @@ gl.viewport(0, 0, canvas.width,canvas.height);
 
 const renderer = new Renderer(gl);
 const shader = new Shader(gl);
-var fiveSidedObj;
+var square;
 var color = [0.6,0.6,0.6];
 
 async function main() {
@@ -27,7 +27,7 @@ async function main() {
         0.1, -0.1,		       
         -0.1, -0.1,
     ]
-    const square = new GLObject(renderer.objCount, shader.program, gl);
+    square = new GLObject(renderer.objCount, shader.program, gl);
     square.setVertexArray(polygonTriangularity(vertices));
     square.translate(-0.5, 0.4);
     square.scale(2, 1);
@@ -49,7 +49,7 @@ var addEventForChangeColor = (item) => {
 
 function setColor(){
     [x,y,z] = getColor(event.srcElement.style.backgroundColor)
-    fiveSidedObj.setColor(mapValue(x, 0, 255, 0, 1),mapValue(y, 0, 255, 0, 1),mapValue(z, 0, 255, 0, 1),1);
+    square.setColor(mapValue(x, 0, 255, 0, 1),mapValue(y, 0, 255, 0, 1),mapValue(z, 0, 255, 0, 1),1);
     renderer.render();
 }
 
