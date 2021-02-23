@@ -19,3 +19,11 @@ function polygonTriangularity(points) {
     }
     return newPoints
 }
+
+function getColor(value) {
+    var x = value.split("rgb")[1].split(", ")
+    var r = parseInt(x[0].substr(1), 16),
+        g = parseInt(x[1], 16),
+        b = parseInt(x[2].slice(0,x[2].length-1), 16);
+    return [r,g,b]
+}

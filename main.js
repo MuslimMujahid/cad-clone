@@ -6,6 +6,8 @@ gl.viewport(0, 0, canvas.width,canvas.height);
 
 const renderer = new Renderer(gl);
 const shader = new Shader(gl);
+var fiveSidedObj;
+var color = [0.6,0.6,0.6];
 
 async function main() {
 
@@ -36,3 +38,31 @@ async function main() {
     renderer.render();
 }
 main();
+
+var addEventForChangeColor = (item) => {
+    item.forEach(element => {
+       element.addEventListener('click', setColor) 
+    });
+}
+
+function setColor(){
+    [x,y,z] = getColor(event.srcElement.style.backgroundColor)
+    fiveSidedObj.setColor(mapValue(x, 0, 255, 0, 1),mapValue(y, 0, 255, 0, 1),mapValue(z, 0, 255, 0, 1),1);
+    renderer.render();
+}
+
+window.onload = () => {
+    addEventForChangeColor([...document.getElementsByClassName("color")])
+}
+
+function mapValue(value, min1, max1, min2, max2) {
+    return (value*(max2-min2) - max2*min1 + min2*max1)/(max1-min1)
+}
+
+function getColor(value) {
+    var x = value.split("rgb")[1].split(", ")
+    var r = parseInt(x[0].substr(1)),
+        g = parseInt(x[1]),
+        b = parseInt(x[2].slice(0,x[2].length-1));
+    return [r,g,b]
+}
