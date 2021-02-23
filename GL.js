@@ -42,7 +42,6 @@ class GLObject {
 
     draw() {
         const gl = this.gl;
-        gl.useProgram(this.shader);
         
         let cord = gl.getAttribLocation(this.shader, "a_pos");
         gl.vertexAttribPointer(cord, 2, gl.FLOAT, false, 0, 0);
