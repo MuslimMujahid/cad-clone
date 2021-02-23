@@ -16,6 +16,8 @@ async function main() {
     shader.attach(vertShader);
     shader.attach(fragShader);
     shader.link();
+    const u_resolution = gl.getUniformLocation(shader.program, 'u_resolution');
+    gl.uniform2f(u_resolution, canvas.width, canvas.height);
 
     // try to to draw an object
     // do this if you want to draw an object
