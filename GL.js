@@ -3,6 +3,12 @@ class GLObject {
         this.id = id;
         this.shader = shader;
         this.gl = gl;
+
+        this.translateX = 0;    
+        this.translateY = 0;
+        this.scaleX = 1;
+        this.scaleY = 1;
+        this.rotation = 0;
     }
 
     setVertexArray(arr) {
@@ -12,70 +18,19 @@ class GLObject {
     setColor(r,g,b,a) {
         this.color = [r,g,b,a]
     }
-    
-    getCenterPoint() {
-        let xMin = 1.0;
-        let xMax = -1.0;
-        let yMin = 1.0;
-        let yMax = -1.0;
-
-        for (let i = 0; i < this.vertexArray.length-1; i += 2) {
-            let x = this.vertexArray[i];
-            let y = this.vertexArray[i+1];
-            if (x < xMin) xMin = x;
-            if (x > xMax) xMax = x;
-            if (y < yMin) yMin = y;
-            if (y > yMax) yMax = y;
-        }
-        
-        let xCenter = (xMin + xMax) / 2;
-        let yCenter = (yMin + yMax) / 2;
-        return [xCenter, yCenter];
-    }
 
     translate(a, b) {
-        let newPoints = [];
-        for (let i = 0; i < this.vertexArray.length-1; i += 2) {
-            let x = this.vertexArray[i];
-            let y = this.vertexArray[i+1];
-            newPoints.push(x + a);
-            newPoints.push(y + b);
-        }
-        this.vertexArray = newPoints;
+        this.translateX = a;
+        this.translateY = b;
     }
 
     rotate(deg) {
-        let rad = (Math.PI / 180) * deg;
-        let sin = Math.sin(rad);
-        let cos = Math.cos(rad);
-
-        let newPoints = [];
-        let center = this.getCenterPoint();
-        let cx = center[0];
-        let cy = center[1];
-
-        for (let i = 0; i < this.vertexArray.length-1; i += 2) {
-            let x = this.vertexArray[i];
-            let y = this.vertexArray[i+1];
-            newPoints.push((cos * (x - cx)) + (sin * (y - cy)) + cx);
-            newPoints.push((cos * (y - cy)) - (sin * (x - cx)) + cy);
-        }
-        
-        this.vertexArray = newPoints;
+        this.rotation = deg;
     }
 
-    scale(k) {
-        let newPoints = [];
-        let center = this.getCenterPoint();
-        let cx = center[0];
-        let cy = center[1];
-        for (let i = 0; i < this.vertexArray.length-1; i += 2) {
-            let x = this.vertexArray[i];
-            let y = this.vertexArray[i+1];
-            newPoints.push(k * (x-cx) + cx);
-            newPoints.push(k * (y-cy) + cy);
-        }
-        this.vertexArray = newPoints;
+    scale(kx, ky) {
+        this.scaleX = kx;
+        this.scaleY = ky;
     }
 
     bind() {
@@ -88,9 +43,15 @@ class GLObject {
     draw() {
         const gl = this.gl;
         gl.useProgram(this.shader);
+        
         let cord = gl.getAttribLocation(this.shader, "a_pos");
         gl.vertexAttribPointer(cord, 2, gl.FLOAT, false, 0, 0);
+        
+        const projectionMat = mul(mul(rotationMat(this.rotation), scaleMat(this.scaleX, this.scaleY)), translateMat(this.translateX, this.translateY));
+        const uniformPos = gl.getUniformLocation(this.shader, 'u_proj_mat')
+        gl.uniformMatrix3fv(uniformPos, false, projectionMat);
         gl.enableVertexAttribArray(cord);
+        console.log(scaleMat(this.scaleX, this.scaleY));
 
         //find location from fragment shader and add color
         var fColorLocation = gl.getUniformLocation(this.shader, "fColor");

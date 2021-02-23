@@ -18,6 +18,6 @@ class Renderer {
         for (const obj of this.objList) {
             obj.draw();
         }
-        requestAnimationFrame(this.render.bind(this));
+        // requestAnimationFrame(this.render.bind(this));
     }
 }

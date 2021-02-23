@@ -11,3 +11,31 @@ function mul(mat1, mat2) {
     }
     return result;
 }
+
+function translateMat(u, v) {
+    return [
+        1, 0, 0,
+        0, 1, 0,
+        u, v, 1
+    ]
+}
+
+function rotationMat(deg) {
+    const rad = deg * Math.PI/180;
+    const sin = Math.sin(rad);
+    const cos = Math.cos(rad);
+    
+    return [
+        cos, -sin, 0,
+        sin, cos, 0,
+        0, 0, 1
+    ]
+}
+
+function scaleMat(kx, ky) {
+    return [
+        kx, 0, 0,
+        0, ky, 0,
+        0, 0, 1
+    ]
+}

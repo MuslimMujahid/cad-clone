@@ -17,21 +17,20 @@ async function main() {
 
     // try to to draw an object
     // do this if you want to draw an object
-    let fiveSided = [
-        -0.2, 0.2,
-        0.1, 0.5,
-        0.2, 0.2,
-        0.2, -0.2,
-        -0.2, -0.2,
+    let vertices = [
+        -0.1, 0.1,		       
+        0.1, 0.1,		     
+        0.1, -0.1,		       
+        -0.1, -0.1,
     ]
-    const fiveSidedObj = new GLObject(renderer.count, shader.program, gl);
-    fiveSidedObj.setVertexArray(polygonTriangularity(fiveSided));
-    fiveSidedObj.translate(0.4, 0.1);
-    fiveSidedObj.scale(0.3);
-    fiveSidedObj.rotate(30);
-    fiveSidedObj.setColor(1,0.1,0,1);
-    fiveSidedObj.bind();
-    renderer.addObject(fiveSidedObj);
+    const square = new GLObject(renderer.objCount, shader.program, gl);
+    square.setVertexArray(polygonTriangularity(vertices));
+    square.translate(-0.5, 0.4);
+    square.scale(2, 1);
+    square.rotate(60);
+    square.setColor(1,0.1,0,1);
+    square.bind();
+    renderer.addObject(square);
 
     // render all object
     renderer.render();
