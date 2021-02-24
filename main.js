@@ -6,6 +6,8 @@ const stateManager = new StateManager();
 const shader = new Shader(gl);
 var color = [0.6,0.6,0.6];
 
+var formLoadProject = document.getElementById("form-load-project");
+
 async function main() {
 
     canvas.onmousemove = function(e) {
@@ -202,4 +204,27 @@ function getColor(value) {
         g = parseInt(x[1]),
         b = parseInt(x[2].slice(0,x[2].length-1));
     return [r,g,b]
+}
+
+async function loadProject() {
+    // main shader
+    const vertShader = await loadShader("shaders/vertShader.glsl", gl.VERTEX_SHADER, gl);
+    const fragShader = await loadShader("shaders/fragShader.glsl", gl.FRAGMENT_SHADER, gl);
+
+    // select shader
+    const selVertShader = await loadShader("shaders/selectVertShader.glsl", gl.VERTEX_SHADER, gl);
+    const selFragShader = await loadShader("shaders/selectFragShader.glsl", gl.FRAGMENT_SHADER, gl);
+    
+    // generate shader
+    const objShader = shader.program(vertShader, fragShader);
+    const selShader = shader.program(selVertShader, selFragShader);
+
+    // create renderer
+    const renderer = new Renderer(gl, objShader, selShader, stateManager);
+    
+    if(document.getElementById('file').value !== "")
+    {
+        let path = (window.URL || window.webkitURL).createObjectURL(document.getElementById('file').files[0]);
+        await initProjectFile(gl, objShader, selShader, path, renderer);
+    }
 }

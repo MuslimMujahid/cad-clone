@@ -8,11 +8,12 @@ async function fetchFile(filename) {
   return await fetch(filename).then((res) => res.text());
 }
 
-async function initModelFile(gl, shaderProgram, selectShaderProgram, filename, renderer) {
-  // ID GLOBJECT HARUS >= 1
+async function initProjectFile(gl, shaderProgram, selectShaderProgram, filename, renderer) {
   const modelJson = await loadFile(filename);
   let GlDataList = JSON.parse(modelJson);
   renderer.clearObjList();
+  
+  // Use object id starting from 1
   for (let i = 0; i < GlDataList.length; i++) {
     let glObject = new GLObject(i + 1, shaderProgram, selectShaderProgram, gl);
     glObject.setVertexArray(GlDataList[i].vertexArray);
@@ -27,7 +28,5 @@ async function initModelFile(gl, shaderProgram, selectShaderProgram, filename, r
     glObject.scale(GlDataList[i].scaleX, GlDataList[i].scaleY);
 
     renderer.addObject(glObject);
-    // console.log("Object added");
-    // console.log(renderer);
   }
 }
