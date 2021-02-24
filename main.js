@@ -63,7 +63,7 @@ var addEventForChangeColor = (item) => {
 }
 
 function setColor(){
-    [x,y,z] = getColor(event.srcElement.style.backgroundColor)
+    [x,y,z] = getColor(Event.target.style.backgroundColor)
     square.setColor(mapValue(x, 0, 255, 0, 1),mapValue(y, 0, 255, 0, 1),mapValue(z, 0, 255, 0, 1),1);
     renderer.render();
 }
