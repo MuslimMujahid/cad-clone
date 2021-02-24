@@ -1,10 +1,12 @@
 class Renderer {
 
-    constructor(gl, stateManager) {
+    constructor(gl, shader, selShader, stateManager) {
         this.gl = gl;
         this.objList = [];
-        this.objCount = 0;
+        this.objCount = 11;
         this.canvas = document.querySelector('canvas');
+        this.shader = shader;
+        this.selShader = selShader;
         this.stm = stateManager;
     }
 
@@ -13,33 +15,16 @@ class Renderer {
         this.objCount++;
     }
 
-    getMouse(e) {
-        const Canvas = canvas.getBoundingClientRect();
-        return {
-            x: e.clientX-Canvas.left,
-            y: window.innerHeight-e.clientY-(window.innerHeight-Canvas.bottom)
-        }
-    }
-
-    render() {
-        // clear buffer
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        
-        // event handler
-        this.canvas.onclick = function(e) {
-            console.log(this.getMouse(e));
-        }.bind(this);        
-
-        // draw
-        for (const obj of this.objList) {
-            obj.draw();
-        }
-        requestAnimationFrame(this.render.bind(this));
-    }
-
     renderTexture() {
         for (const obj of this.objList) {
             obj.drawSelect();
         }
+    }
+
+    render() {
+        for (const obj of this.objList) {
+            obj.draw();
+        }
+        requestAnimationFrame(this.render.bind(this));
     }
 }
