@@ -47,7 +47,7 @@ class GLObject {
         gl.vertexAttribPointer(cord, 2, gl.FLOAT, false, 0, 0);
         
         const projectionMat = mul(mul(rotationMat(this.rotation), scaleMat(this.scaleX, this.scaleY)), translateMat(this.translateX, this.translateY));
-        const uniformPos = gl.getUniformLocation(this.shader, 'u_proj_mat')
+        const uniformPos = gl.getUniformLocation(this.shader, 'u_proj_mat');
         gl.uniformMatrix3fv(uniformPos, false, projectionMat);
         gl.enableVertexAttribArray(cord);
         console.log(scaleMat(this.scaleX, this.scaleY));

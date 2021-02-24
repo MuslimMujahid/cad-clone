@@ -8,6 +8,13 @@ const shader = new Shader(gl);
 var square;
 var color = [0.6,0.6,0.6];
 
+function getMouse(e) {
+    return {
+        x: e.clientX-Canvas.left,
+        y: window.innerHeight-e.clientY-(window.innerHeight-Canvas.bottom)
+    }
+}
+
 async function main() {
 
     const vertShader = await loadShader("shaders/vertShader.glsl", gl.VERTEX_SHADER, gl);
@@ -16,23 +23,23 @@ async function main() {
     shader.attach(fragShader);
     shader.link();
     gl.useProgram(shader.program);
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     const u_resolution = gl.getUniformLocation(shader.program, 'u_resolution');
-    gl.uniform2f(u_resolution, canvas.width, canvas.height);
+    gl.uniform2f(u_resolution, gl.canvas.width, gl.canvas.height);
 
     // try to to draw an object
     // do this if you want to draw an object
     let vertices = [
-        400, 800,		       
-        800, 800,		     
-        800, 400,		       
-        400, 400,
+        200, 400,		       
+        400, 400,		     
+        400, 200,		       
+        200, 200,
     ]
     square = new GLObject(renderer.objCount, shader.program, gl);
     square.setVertexArray(polygonTriangularity(vertices));
-    square.translate(0, 200);
-    square.scale(1, 1);
-    // square.rotate(60);
+    square.translate(0, 0);
+    // square.scale(1, .2);
+    // square.rotate(30);
     square.setColor(1,0.1,0,1);
     square.bind();
     renderer.addObject(square);
