@@ -6,6 +6,8 @@ const stateManager = new StateManager();
 const shader = new Shader(gl);
 var color = [0.6,0.6,0.6];
 
+// console.log(document.getElementById("create-square"));
+
 async function main() {
 
     canvas.onmousemove = function(e) {
@@ -36,6 +38,39 @@ async function main() {
 
     // create renderer
     const renderer = new Renderer(gl, objShader, selShader, stateManager);
+
+    
+    document.querySelector("#create-square").onclick = function() {
+        let vertices = [
+            300, 500,		       
+            500, 500,		     
+            500, 300,		       
+            300, 300,
+        ]
+        const square = new GLObject(
+            renderer.objCount, 
+            objShader, 
+            selShader, 
+            gl
+        );
+        square.setVertexArray(polygonTriangularity(vertices));
+        renderer.addObject(square);
+    }
+    document.querySelector("#create-triangle").onclick = function() {
+        let vertices = [
+            300, 500,		       
+            500, 500,		     
+            500, 300
+        ]
+        const triangle = new GLObject(
+            renderer.objCount, 
+            objShader, 
+            selShader, 
+            gl
+        );
+        triangle.setVertexArray(polygonTriangularity(vertices));
+        renderer.addObject(triangle);
+    }
 
     // try to to draw an object
     // do this if you want to draw an object
