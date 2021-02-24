@@ -9,8 +9,17 @@ var color = [0.6,0.6,0.6];
 async function main() {
 
     canvas.onmousemove = function(e) {
+        stateManager.prevMouseX = stateManager.mouseX;
+        stateManager.prevMouseY = stateManager.mouseY;
         stateManager.mouseX = e.clientX * gl.canvas.width / canvas.clientWidth;  
         stateManager.mouseY = gl.canvas.height - e.clientY * gl.canvas.height / canvas.clientHeight - 1;  
+    
+        if (stateManager.selectedObject) {
+            const deltaX = stateManager.mouseX-stateManager.prevMouseX;
+            const deltaY = stateManager.mouseY-stateManager.prevMouseY;
+
+            stateManager.selectedObject.translate(deltaX, deltaY);
+        }
     };
 
     // main shader
@@ -31,10 +40,10 @@ async function main() {
     // try to to draw an object
     // do this if you want to draw an object
     let vertices = [
-        0, 600,		       
-        500, 600,		     
-        500, 0,		       
-        0, 0,
+        300, 500,		       
+        500, 500,		     
+        500, 300,		       
+        300, 300,
     ]
     square = new GLObject(
         renderer.objCount, 
@@ -43,30 +52,60 @@ async function main() {
         gl
     );
     square.setVertexArray(polygonTriangularity(vertices));
-    square.setColor(0.1,1,0,1);
     renderer.addObject(square);
 
-    // let vertices2 = [
-    //     500, 550,
-    //     550, 550,
-    //     550, 500,
-    //     500, 500
-    // ]
-    // square2 = new GLObject(
-    //     renderer.objCount, 
-    //     objShader, 
-    //     selShader, 
-    //     gl
-    // );
-    // square2.setVertexArray(polygonTriangularity(vertices2));
-    // square2.setColor(0,0,0,1);
-    // renderer.addObject(square2);
+    canvas.onclick = function(e) {
+        const data = stateManager.color;
+        const selectedObj = renderer.objList.find(obj => 
+            mapValue(obj.color[0], 0, 1, 0, 255) == data[0] &&
+            mapValue(obj.color[1], 0, 1, 0, 255) == data[1] &&
+            mapValue(obj.color[2], 0, 1, 0, 255) == data[2]
+        );
+        console.log(renderer.objList[0].color.map(val => mapValue(val, 0, 1, 0, 255)));
+        console.log(data);
+        console.log(selectedObj);
+        
 
+        if (selectedObj) {
+            if (!stateManager.selectedObject) {
+                stateManager.selectedObject = selectedObj;
+            } else {
+                const color = stateManager.selectedObject.color;
+                if (color[0] == selectedObj.color[0] &&
+                    color[1] == selectedObj.color[1] &&
+                    color[2] == selectedObj.color[2])
+                {
+                    stateManager.selectedObject = null;
+                } else {
+                    stateManager.selectedObject = selectedObj;
+                }
+            }
+        }
 
-    
+        // if (!stateManager.selectedObject) {
+        //     stateManager.selectedObject = renderer.objList[0];
+        // } else {
+        //     stateManager.selectedObject = null;
+        // } 
+    }
+
+    let vertices2 = [
+        500, 550,
+        550, 550,
+        550, 500,
+        500, 500
+    ]
+    square2 = new GLObject(
+        renderer.objCount, 
+        objShader, 
+        selShader, 
+        gl
+    );
+    square2.setVertexArray(polygonTriangularity(vertices2));
+    renderer.addObject(square2);
 
     // render all object
-    // renderer.render();
+    renderer.render();
 
     // ====================================================================
 
@@ -114,15 +153,15 @@ async function main() {
         // pick a pixel by mouse position
         let data = new Uint8Array(4); // RGBA values for each pixel
         gl.readPixels(stateManager.mouseX, stateManager.mouseY, 1 ,1 ,gl.RGBA , gl.UNSIGNED_BYTE, data);
-
+        stateManager.color = data;
         // const [red, green, blue] = [
         //     gl.RED_BITS, gl.GREEN_BITS, 
         //     gl.BLUE_BITS].map(bits => gl.getParameter(bits));
         
-        console.log(stateManager.mouseX, stateManager.mouseY);
+        // console.log(stateManager.mouseX, stateManager.mouseY);
         // console.log(red, green, blue);        
         const id = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24)
-        console.log(data)
+        // console.log(data)
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         
         // draw

@@ -10,6 +10,12 @@ class GLObject {
         this.scaleX = 1;
         this.scaleY = 1;
         this.rotation = 0;
+
+        // generate color
+        const r = mapValue(getRandomInt(256), 0, 255, 0, 1);
+        const g = mapValue(getRandomInt(256), 0, 255, 0, 1);
+        const b = mapValue(getRandomInt(256), 0, 255, 0, 1);
+        this.color = [r, g, b, 255];
     }
 
     setVertexArray(arr) {
@@ -21,8 +27,8 @@ class GLObject {
     }
 
     translate(a, b) {
-        this.translateX = a;
-        this.translateY = b;
+        this.translateX += a;
+        this.translateY += b;
     }
 
     rotate(deg) {
@@ -81,9 +87,9 @@ class GLObject {
         const projectionMat = mul(mul(rotationMat(this.rotation), scaleMat(this.scaleX, this.scaleY)), translateMat(this.translateX, this.translateY));
 
         // set values
-        gl.uniformMatrix3fv(uniformPos, false, projectionMat);
         gl.vertexAttribPointer(vertexPos, 2, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(vertexPos);
+        gl.uniformMatrix3fv(uniformPos, false, projectionMat);
         gl.uniform2f(u_resolution, gl.canvas.width, gl.canvas.height);
 
         // const uniformId = [

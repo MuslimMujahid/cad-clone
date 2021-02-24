@@ -1,9 +1,12 @@
 class StateManager {
     constructor() {
         this.state = stateType.SELECT;
-        this.selectedObjectId = null;
+        this.selectedObject = null;
         this.mouseX = 0;
         this.mouseY = 0;
+        this.prevMouseX = 0;
+        this.prevMouseY = 0;
+        this.color = null;
     } 
 
     setState(state) {

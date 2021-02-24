@@ -27,3 +27,7 @@ function getColor(value) {
         b = parseInt(x[2].slice(0,x[2].length-1), 16);
     return [r,g,b]
 }
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
