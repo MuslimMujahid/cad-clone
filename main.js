@@ -9,16 +9,13 @@ const shader = new Shader(gl);
 var color = [0.6,0.6,0.6];
 
 async function main() {
-
+    // main shader
     const vertShader = await loadShader("shaders/vertShader.glsl", gl.VERTEX_SHADER, gl);
     const fragShader = await loadShader("shaders/fragShader.glsl", gl.FRAGMENT_SHADER, gl);
-    shader.attach(vertShader);
-    shader.attach(fragShader);
-    shader.link();
-    gl.useProgram(shader.program);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    const u_resolution = gl.getUniformLocation(shader.program, 'u_resolution');
-    gl.uniform2f(u_resolution, gl.canvas.width, gl.canvas.height);
+    
+    // select shader
+    const selVertShader = await loadShader("shaders/selectVertShader.glsl", gl.VERTEX_SHADER, gl);
+    const selFragShader = await loadShader("shaders/selectFragShader.glsl", gl.FRAGMENT_SHADER, gl);
 
     // try to to draw an object
     // do this if you want to draw an object
@@ -28,14 +25,31 @@ async function main() {
         400, 200,		       
         200, 200,
     ]
-    square = new GLObject(renderer.objCount, shader.program, gl);
+    square = new GLObject(
+        renderer.objCount, 
+        shader.program(vertShader, fragShader), 
+        shader.program(selVertShader, selFragShader), 
+        gl
+    );
     square.setVertexArray(polygonTriangularity(vertices));
-    square.translate(0, 0);
-    square.scale(1, 1);
-    // square.rotate(30);
-    square.setColor(1,0.1,0,1);
-    square.bind();
+    square.setColor(1,0,1,1);
     renderer.addObject(square);
+
+    let vertices2 = [
+        500, 550,
+        550, 550,
+        550, 500,
+        500, 500
+    ]
+    square2 = new GLObject(
+        renderer.objCount, 
+        shader.program(vertShader, fragShader), 
+        shader.program(selVertShader, selFragShader), 
+        gl
+    );
+    square2.setVertexArray(polygonTriangularity(vertices2));
+    square2.setColor(0,0,0,1);
+    renderer.addObject(square2);
 
     // render all object
     renderer.render();

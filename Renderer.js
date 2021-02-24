@@ -36,4 +36,10 @@ class Renderer {
         }
         requestAnimationFrame(this.render.bind(this));
     }
+
+    renderTexture() {
+        for (const obj of this.objList) {
+            obj.drawSelect();
+        }
+    }
 }
