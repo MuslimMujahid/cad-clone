@@ -14,6 +14,11 @@ class Renderer {
         this.objList.push(obj);
         this.objCount++;
     }
+    
+    clearObjList() {
+        this.objList = [];
+        this.count = 0;
+    }
 
     renderTexture() {
         for (const obj of this.objList) {
