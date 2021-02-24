@@ -1,9 +1,11 @@
 class Renderer {
 
-    constructor(gl) {
+    constructor(gl, stateManager) {
         this.gl = gl;
         this.objList = [];
         this.objCount = 0;
+        this.canvas = document.querySelector('canvas');
+        this.stm = stateManager;
     }
 
     addObject(obj) {
@@ -11,13 +13,27 @@ class Renderer {
         this.objCount++;
     }
 
+    getMouse(e) {
+        const Canvas = canvas.getBoundingClientRect();
+        return {
+            x: e.clientX-Canvas.left,
+            y: window.innerHeight-e.clientY-(window.innerHeight-Canvas.bottom)
+        }
+    }
+
     render() {
-        //console.log('render');
-        gl.clearColor(1, 1, 1, 1);
+        // clear buffer
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        
+        // event handler
+        this.canvas.onclick = function(e) {
+            console.log(this.getMouse(e));
+        }.bind(this);        
+
+        // draw
         for (const obj of this.objList) {
             obj.draw();
         }
-        // requestAnimationFrame(this.render.bind(this));
+        requestAnimationFrame(this.render.bind(this));
     }
 }

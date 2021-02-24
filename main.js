@@ -3,17 +3,10 @@ var canvas = document.querySelector('canvas');
 const gl = canvas.getContext('webgl');
 gl.enable(gl.DEPTH_TEST);
 
-const renderer = new Renderer(gl);
+const stateManager = new StateManager();
+const renderer = new Renderer(gl, stateManager);
 const shader = new Shader(gl);
-var square;
 var color = [0.6,0.6,0.6];
-
-function getMouse(e) {
-    return {
-        x: e.clientX-Canvas.left,
-        y: window.innerHeight-e.clientY-(window.innerHeight-Canvas.bottom)
-    }
-}
 
 async function main() {
 
@@ -38,7 +31,7 @@ async function main() {
     square = new GLObject(renderer.objCount, shader.program, gl);
     square.setVertexArray(polygonTriangularity(vertices));
     square.translate(0, 0);
-    // square.scale(1, .2);
+    square.scale(1, 1);
     // square.rotate(30);
     square.setColor(1,0.1,0,1);
     square.bind();
