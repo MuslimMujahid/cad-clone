@@ -4,9 +4,9 @@ function mapValue(value, min1, max1, min2, max2) {
 
 function polygonTriangularity(points) {
     let newPoints = []
-    for (let i = 0; i < points.length-1; i += 2) {
+    for (let i = 0; i < points.length-2; i += 2) {
         
-        if (i+2 == points.length-i-2) continue;
+        if (i == points.length-i-2 || i+2 == points.length-i-2) continue;
 
         let triangle = [
             points[i], points[i+1], 
