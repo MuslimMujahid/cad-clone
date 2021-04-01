@@ -6,6 +6,8 @@ const sm = new StateManager();
 const shader = new Shader(gl);
 var color = [0.6,0.6,0.6];
 
+var renderer;
+
 var formLoadProject = document.getElementById("form-load-project");
 
 async function main() {
@@ -34,17 +36,11 @@ async function main() {
 
     // try to to draw an object
     // do this if you want to draw an object
-    let vertices = [
-        300, 500,		       
-        500, 500,		     
-        500, 300,		       
-        300, 300,
-    ]
     square = new GLObject(objShader, selShader, gl);
     square.Origin(100, 100);
     // square.setVertexArray(vertices);
-    square.Translate(200, 0);
-    square.Scale(10, 20);
+    square.Translate(200, 200);
+    square.Scale(10, 10);
     // console.log(square.matTranslation);
     renderer.addObject(square);
 
