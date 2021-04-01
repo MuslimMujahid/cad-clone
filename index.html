@@ -8,6 +8,7 @@
         <script type='text/javascript' src='GL.js' defer></script>
         <script type='text/javascript' src='Renderer.js' defer></script>
         <script type='text/javascript' src='loaders/loader.js' defer></script>
+       <script type='text/javascript' src='loaders/loadFile.js' defer></script>
         <script type='text/javascript' src='utils/utils.js' defer></script>
         <script type='text/javascript' src='state/StateManager.js' defer></script>
         <script type='text/javascript' src='state/stateType.js' defer></script>
@@ -22,11 +23,8 @@
             <div class='container-2'>
                 <div class='interface'>
                     <div class='tools'>
-                        <form enctype="multipart/form-data" id="form-load-project">
-                            <label class="file-label" for='file'>Load project</label>
-                            <input type="file" id="file">
-                        </form>
-                        <button class='save-button'>save project</button>
+                        <button class = "load-button" onclick="saveData()">Save project</button>
+                        <button class = "load-button" onclick="loadData()">Load project</button>
                     </div>
                     <div class='tools'>
                         <h3 class='tools-title'>Shapes</h3>
@@ -125,6 +123,7 @@
                 <canvas width='1024' height='600'></canvas>
             </div>
       </div>
+        <div id="dynamic-parent" hidden></div>
    </body>
 </html>
 

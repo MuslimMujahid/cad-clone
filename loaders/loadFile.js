@@ -1,32 +1,50 @@
+function saveData() {
+  var json = JSON.stringify(renderer, null, 4);
+  let dataUri =
+      "data:application/json;charset=utf-8," + encodeURIComponent(json);
+  let exportFileDefaultName = "model.json";
+
+  let linkElement = document.createElement("a");
+  linkElement.setAttribute("href", dataUri);
+  linkElement.setAttribute("download", exportFileDefaultName);
+  linkElement.click();
+}
+
+function loadData() {
+  let linkElement = document.createElement("input");
+  linkElement.setAttribute("type", "file");
+  linkElement.setAttribute("name", "file-load");
+  linkElement.setAttribute("value", "file-load");
+  linkElement.setAttribute("id", "file-load");
+  linkElement.setAttribute("onchange", "importData()");
+
+  var dynamicParent = document.getElementById("dynamic-parent");
+  dynamicParent.appendChild(linkElement);
+
+  linkElement.click();
+}
+
+async function importData() {
+  var fileUpload = document.getElementById("file-load");
+
+  if (fileUpload.value !== "") {
+    var path = (window.URL || window.webkitURL).createObjectURL(fileUpload.files[0]);
+    await initModelFile(path);
+  }
+}
+
+async function initModelFile(filename) {
+  const modelJson = await loadFile(filename);
+  renderer = JSON.parse(modelJson);
+
+  // TODO: reset and redraw
+  renderer.render();
+}
+
 const loadFile = async (filename) => {
-  // fetch from file to get raw file data
   return await fetchFile(filename);
 };
 
 async function fetchFile(filename) {
-  // fetch the source file to get json data
   return await fetch(filename).then((res) => res.text());
-}
-
-async function initProjectFile(gl, shaderProgram, selectShaderProgram, filename, renderer) {
-  const modelJson = await loadFile(filename);
-  let GlDataList = JSON.parse(modelJson);
-  renderer.clearObjList();
-  
-  // Use object id starting from 1
-  for (let i = 0; i < GlDataList.length; i++) {
-    let glObject = new GLObject(i + 1, shaderProgram, selectShaderProgram, gl);
-    glObject.setVertexArray(GlDataList[i].vertexArray);
-    glObject.setColor(
-      GlDataList[i].color[0],
-      GlDataList[i].color[1],
-      GlDataList[i].color[2],
-      GlDataList[i].color[3]
-    );
-    glObject.translate(GlDataList[i].translateX, GlDataList[i].translateY);
-    glObject.rotate(GlDataList[i].rotation);
-    glObject.scale(GlDataList[i].scaleX, GlDataList[i].scaleY);
-
-    renderer.addObject(glObject);
-  }
 }

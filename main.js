@@ -6,6 +6,8 @@ const stateManager = new StateManager();
 const shader = new Shader(gl);
 var color = [0.6,0.6,0.6];
 
+var renderer;
+
 var formLoadProject = document.getElementById("form-load-project");
 
 async function main() {
@@ -37,7 +39,7 @@ async function main() {
     const selShader = shader.program(selVertShader, selFragShader);
 
     // create renderer
-    const renderer = new Renderer(gl, objShader, selShader, stateManager);
+    renderer = new Renderer(gl, objShader, selShader, stateManager);
 
     
     document.querySelector("#create-square").onclick = function() {
