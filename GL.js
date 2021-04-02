@@ -88,7 +88,6 @@ class GLObject {
         const a_pos = gl.getAttribLocation(this.shader, "a_pos");
         const uniformPos = gl.getUniformLocation(this.shader, 'u_proj_mat');
         const u_resolution = gl.getUniformLocation(this.shader, 'u_resolution');
-        // const projectionMat = mul(mul(rotationMat(this.rotation), scaleMat(this.scaleX, this.scaleY)), translateMat(this.translateX, this.translateY));
         this.calcProjectionMatrix();
         const projectionMat = flat(this.projMatrix)
         const fColorLocation = gl.getUniformLocation(this.shader, "fColor");
@@ -108,17 +107,16 @@ class GLObject {
         const gl = this.gl;
 
         // use program
-        gl.useProgram(this.shader);
+        gl.useProgram(this.selShader);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
         // get variables
-        const a_pos = gl.getAttribLocation(this.shader, "a_pos");
-        const uniformPos = gl.getUniformLocation(this.shader, 'u_proj_mat');
-        const u_resolution = gl.getUniformLocation(this.shader, 'u_resolution');
-        // const projectionMat = mul(mul(rotationMat(this.rotation), scaleMat(this.scaleX, this.scaleY)), translateMat(this.translateX, this.translateY));
+        const a_pos = gl.getAttribLocation(this.selShader, "a_pos");
+        const uniformPos = gl.getUniformLocation(this.selShader, 'u_proj_mat');
+        const u_resolution = gl.getUniformLocation(this.selShader, 'u_resolution');
         this.calcProjectionMatrix();
         const projectionMat = flat(this.projMatrix)
-        const fColorLocation = gl.getUniformLocation(this.shader, "fColor");
+        const fColorLocation = gl.getUniformLocation(this.selShader, "fColor");
         
         // set values
         gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, false, 0, 0);
