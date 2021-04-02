@@ -40,7 +40,6 @@ async function main() {
     square2.Scale(10, 10);
     renderer.addObject(square2);
 
-    // Some... texture stuffs
     // defining texture buffer
     const texBuf = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texBuf);
@@ -91,20 +90,11 @@ async function main() {
         depBuf
     );
 
-    //
-    // DEBUG CALLS HERE
-    //
-
-    // drawDebugObjects(shaderProgram);
-
-    //
-    // END DEBUG CALLS
-    //
-
     function render() {
         gl.clearColor(255, 255, 255, 255);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
         // drawing texture
         const frameBuffer = frameBuf;
         gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
@@ -114,7 +104,6 @@ async function main() {
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         renderer.renderText();
-        // draggerRenderer.renderTex(selectProgram);
 
         // getting the pixel value
         const data = new Uint8Array(4);
@@ -124,10 +113,9 @@ async function main() {
         console.log(sm.hoverObjectId)
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
         // draw the actual objects
-        // gl.useProgram(shaderProgram);
         renderer.render();
-        // draggerRenderer.render();
         requestAnimationFrame(render);
     }
 

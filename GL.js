@@ -138,6 +138,25 @@ class GLObject {
     }
 }
 
-class Rectangle extends GLObject {
+class GLRectangle extends GLObject {
+    constructor(id, shader, selShader, gl) {
+        super(id, shader, selShader, gl);
+    }
+}
 
+class GLTriangle extends GLObject {
+    constructor(id, shader, selShader, gl) {
+        super(id, shader, selShader, gl);
+    }
+
+    Origin(x, y) {
+        const initialSize = 20;
+        const shape = [
+            x, y+initialSize/2,
+            x+initialSize/2, y-initialSize/2,
+            x-initialSize/2, y-initialSize/2
+        ]
+        this.vertexArray = polygonTriangularity(shape);
+        this.origin = [x, y]
+    }
 }

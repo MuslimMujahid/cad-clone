@@ -37,17 +37,24 @@ function eventsListen(renderer, sm, gl, shaders) {
     };
 
     document.querySelector('canvas').onmousedown = function(e) {
-        sm.prevMouseX = sm.mouseX;
-        sm.prevMouseY = sm.mouseY;
-        sm.mouseX = e.clientX * gl.canvas.width / canvas.clientWidth;  
-        sm.mouseY = gl.canvas.height - e.clientY * gl.canvas.height / canvas.clientHeight - 1;  
-        sm.select(sm.hoverObjectId)
-    }
+        console.log("mouse down on canvas")
+        if (sm.createRectangle || sm.createTriangle || sm.createLine) {
+            console.log("create shape")
+            if (sm.createRectangle) {
+                console.log("create rectangle");
+                const newObject = new GLRectangle(renderer.objCount+1, ...shaders, gl);
+                newObject.Origin(sm.mouseX, sm.mouseY);
+                newObject.Scale(10, 10);
+                renderer.addObject(newObject);
+                sm.createRectangle = false;
+            }
+        } else {
+            sm.select(sm.hoverObjectId)
+            document.querySelector('canvas').style.cursor = "grabbing";
+            sm.selectObjectToDragId = sm.hoverObjectId;
+            sm.mousedown = true;
+        }
 
-    document.onmousedown = function() {
-        document.querySelector('canvas').style.cursor = "grab";
-        sm.selectObjectToDragId = sm.hoverObjectId;
-        sm.mousedown = true;
     }
 
     document.onmouseup = function() {
@@ -70,7 +77,11 @@ function eventsListen(renderer, sm, gl, shaders) {
         })
 
     document.querySelector('#create-square').onclick = (e) => {
-        const newObject = new GLObject(renderer.objCount+1, ...shaders, gl);
+        sm.createRectangle = true;
+        console.log("create rectangle button")
+    }
+    document.querySelector('#create-triangle').onclick = (e) => {
+        const newObject = new GLTriangle(renderer.objCount+1, ...shaders, gl);
         newObject.Origin(700, 400);
         newObject.Scale(10, 10);
         renderer.addObject(newObject);
