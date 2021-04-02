@@ -1,6 +1,6 @@
-precision mediump float;
-uniform vec3 fColor;  
+precision highp float;
+uniform vec4 fColor;  
 
 void main() {
-    gl_FragColor = vec4(fColor, 1);
+    gl_FragColor = fColor;
 }

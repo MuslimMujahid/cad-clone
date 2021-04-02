@@ -1,7 +1,8 @@
 class StateManager {
     constructor() {
         this.state = stateType.SELECT;
-        this.selectedObject = null;
+        this.hoverObjectId = null;
+        this.selectedObjectId = null;
         this.mouseX = 0;
         this.mouseY = 0;
         this.prevMouseX = 0;
@@ -13,11 +14,11 @@ class StateManager {
         this.state = state;
     }
 
+    hover(objectId) {
+        this.hoverObjectId = objectId;
+    }
+
     select(objectId) {
-        if (this.selectedObjectId != objectId) {
-            this.selectedObjectId = objectId;
-        } else {
-            this.selectedObjectId = null;
-        }
+        this.selectedObjectId = this.hoverObjectId;
     }
 }

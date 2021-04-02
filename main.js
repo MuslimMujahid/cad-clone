@@ -36,13 +36,17 @@ async function main() {
 
     // try to to draw an object
     // do this if you want to draw an object
-    square = new GLObject(objShader, selShader, gl);
+    const square = new GLObject(renderer.objCount+1, objShader, selShader, gl);
     square.Origin(100, 100);
-    // square.setVertexArray(vertices);
-    square.Translate(200, 200);
+    square.Translate(200, 400);
     square.Scale(10, 10);
-    // console.log(square.matTranslation);
     renderer.addObject(square);
+
+    const square2 = new GLObject(renderer.objCount+1, objShader, selShader, gl);
+    square2.Origin(50, 50);
+    square2.Translate(200, 200);
+    square2.Scale(10, 10);
+    renderer.addObject(square2);
 
     // Some... texture stuffs
     // defining texture buffer
@@ -105,7 +109,7 @@ async function main() {
     // END DEBUG CALLS
     //
 
-    function render(now) {
+    function render() {
         gl.clearColor(255, 255, 255, 255);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -114,27 +118,18 @@ async function main() {
         gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
 
         // Depth Test
-        // gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.DEPTH_TEST);
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        // gl.useProgram(selectProgram);
-        // const resolutionPos = gl.getUniformLocation(selectProgram, "u_resolution");
-        // gl.uniform2f(resolutionPos, gl.canvas.width, gl.canvas.height);
-        // renderer.renderTex(selectProgram);
+        renderer.renderText();
         // draggerRenderer.renderTex(selectProgram);
 
         // getting the pixel value
-        // const pixelX = (appState.mousePos.x * gl.canvas.width) / canvas.clientWidth;
-        // const pixelY =
-        //   gl.canvas.height -
-        //   (appState.mousePos.y * gl.canvas.height) / canvas.clientHeight -
-        //   1;
-        // const data = new Uint8Array(4);
-        // gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, data);
-        // const id = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
-        // appState.selId = id;
-
-        // showObjId(id, "hov-id");
+        const data = new Uint8Array(4);
+        gl.readPixels(sm.mouseX, sm.mouseY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, data);
+        const id = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
+        sm.hover(id);
+        console.log(sm.hoverObjectId)
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         // draw the actual objects

@@ -3,7 +3,7 @@ class Renderer {
     constructor(gl, shader, selShader, stateManager) {
         this.gl = gl;
         this.objList = [];
-        this.objCount = 11;
+        this.objCount = 0;
         this.canvas = document.querySelector('canvas');
         this.shader = shader;
         this.selShader = selShader;
@@ -31,8 +31,17 @@ class Renderer {
         for (const obj of this.objList) {
             obj.bind();
             obj.draw();
-            gl.bindBuffer(gl.ARRAY_BUFFER, null);
         }
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
         // requestAnimationFrame(this.render.bind(this));
+    }
+
+    renderText() {
+        const gl = this.gl;
+        for (const obj of this.objList) {
+            obj.bind();
+            obj.drawSelect();
+        }
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
     }
 }

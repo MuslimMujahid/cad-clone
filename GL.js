@@ -1,19 +1,11 @@
 class GLObject {
 
-    static objCount = 0;
-
-    constructor(shader, selShader, gl) {
-        this.objCount += 1;
-        this.id = [
-            ((this.objCount >>  0) & 0xFF) / 0xFF,
-            ((this.objCount >>  8) & 0xFF) / 0xFF,
-            ((this.objCount >> 16) & 0xFF) / 0xFF,
-            ((this.objCount >> 24) & 0xFF) / 0xFF,
-        ]
+    constructor(id, shader, selShader, gl) {
+        this.id = id;
         this.shader = shader;
         this.selShader = selShader;
         this.gl = gl;
-        this.color = [0.2, 0.1, 0.5];
+        this.color = [0.2, 0.1, 0.5, 1];
 
         // projection matrix
         this.matTranslation = Identity(3);
@@ -96,7 +88,40 @@ class GLObject {
         gl.enableVertexAttribArray(a_pos);
         gl.uniformMatrix3fv(uniformPos, false, flat(projectionMat));
         gl.uniform2f(u_resolution, gl.canvas.width, gl.canvas.height);
-        gl.uniform3fv(fColorLocation, this.color);
+        gl.uniform4fv(fColorLocation, this.color);
+
+        // draw object
+        gl.drawArrays(gl.TRIANGLES, 0, this.vertexArray.length/2);
+    }
+
+    drawSelect() {
+        const gl = this.gl;
+
+        // use program
+        gl.useProgram(this.shader);
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+        // get variables
+        const a_pos = gl.getAttribLocation(this.shader, "a_pos");
+        const uniformPos = gl.getUniformLocation(this.shader, 'u_proj_mat');
+        const u_resolution = gl.getUniformLocation(this.shader, 'u_resolution');
+        // const projectionMat = mul(mul(rotationMat(this.rotation), scaleMat(this.scaleX, this.scaleY)), translateMat(this.translateX, this.translateY));
+        this.calcProjectionMatrix();
+        const projectionMat = flat(this.projMatrix)
+        const fColorLocation = gl.getUniformLocation(this.shader, "fColor");
+        
+        // set values
+        gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(a_pos);
+        gl.uniformMatrix3fv(uniformPos, false, flat(projectionMat));
+        gl.uniform2f(u_resolution, gl.canvas.width, gl.canvas.height);
+        const uniformId = [
+            ((this.id >> 0) & 0xff) / 0xff,
+            ((this.id >> 8) & 0xff) / 0xff,
+            ((this.id >> 16) & 0xff) / 0xff,
+            ((this.id >> 24) & 0xff) / 0xff,
+        ];
+        gl.uniform4fv(fColorLocation, uniformId);
 
         // draw object
         gl.drawArrays(gl.TRIANGLES, 0, this.vertexArray.length/2);
