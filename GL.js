@@ -12,7 +12,7 @@ class GLObject {
         this.translate = [0, 0]
 
         // projection matrix
-        this.matScale = Identity(3);
+        // this.matScale = Identity(3);
     }
 
     setVertexArray(arr) {
@@ -24,7 +24,7 @@ class GLObject {
     }
 
     Origin(x, y) {
-        const initialSize = 20;
+        const initialSize = 200;
         const shape = [
             x-initialSize/2, y+initialSize/2,
             x+initialSize/2, y+initialSize/2,
@@ -41,11 +41,8 @@ class GLObject {
     }
 
     Scale(dx, dy) {
-        this.matScale = reshape([
-            dx, 0, 0,
-            0, dy, 0,
-            0, 0, 1
-        ], [3, 3])
+        this.scale[0] += dx;
+        this.scale[1] += dy;
     }
 
     bind() {
@@ -74,7 +71,16 @@ class GLObject {
             0, 1, 0,
             tx, ty, 1
         ], [3, 3])
-        this.projMatrix = matmulMany(negOriginMat, this.matScale, originMat, matTranslation);
+
+        const [sx, sy] = this.scale;
+        let matScale = reshape([
+            sx, 0, 0,
+            0, sy, 0,
+            0, 0, 1 
+        ], [3, 3]);
+        matScale = matmulMany(negOriginMat, matScale, originMat)
+        this.projMatrix = matmulMany(matScale, matTranslation);
+        console.log(this.projMatrix)
     }
 
     draw() {
@@ -82,7 +88,7 @@ class GLObject {
 
         // use program
         gl.useProgram(this.shader);
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
         // get variables
         const a_pos = gl.getAttribLocation(this.shader, "a_pos");
@@ -108,7 +114,7 @@ class GLObject {
 
         // use program
         gl.useProgram(this.selShader);
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
         // get variables
         const a_pos = gl.getAttribLocation(this.selShader, "a_pos");
@@ -140,6 +146,18 @@ class GLRectangle extends GLObject {
     constructor(id, shader, selShader, gl) {
         super(id, shader, selShader, gl);
     }
+
+    Origin(x, y) {
+        const initialSize = 200;
+        const shape = [
+            x-initialSize/2, y+initialSize/2,
+            x+initialSize/2, y+initialSize/2,
+            x+initialSize/2, y-initialSize/2,
+            x-initialSize/2, y-initialSize/2
+        ]
+        this.vertexArray = polygonTriangularity(shape);
+        this.origin = [x, y]
+    } 
 }
 
 class GLTriangle extends GLObject {
@@ -148,7 +166,7 @@ class GLTriangle extends GLObject {
     }
 
     Origin(x, y) {
-        const initialSize = 20;
+        const initialSize = 200;
         const shape = [
             x, y+initialSize/2,
             x+initialSize/2, y-initialSize/2,

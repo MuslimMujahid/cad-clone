@@ -2,12 +2,9 @@
 function eventsListen(renderer, sm, gl, shaders) {
     
     function setColor(color){
-        console.log("set color")
         if (sm.selectObjectById !== null) {
-            console.log(`change color object ${sm.selectedObjectId} to ${color}`)
             const [x, y, z] = color;
             const object = renderer.selectObjectById(sm.selectedObjectId);
-            console.log(object)
             object.setColor(mapValue(x, 0, 255, 0, 1),mapValue(y, 0, 255, 0, 1),mapValue(z, 0, 255, 0, 1));
         }
     }
@@ -37,24 +34,20 @@ function eventsListen(renderer, sm, gl, shaders) {
     };
 
     document.querySelector('canvas').onmousedown = function(e) {
-        console.log("mouse down on canvas")
-        if (sm.createRectangle || sm.createTriangle || sm.createLine) {
-            console.log("create shape")
-            if (sm.createRectangle) {
-                console.log("create rectangle");
-                const newObject = new GLRectangle(renderer.objCount+1, ...shaders, gl);
-                newObject.Origin(sm.mouseX, sm.mouseY);
-                newObject.Scale(10, 10);
-                renderer.addObject(newObject);
-                sm.createRectangle = false;
-            }
+        if (sm.createRectangle) {
+            const newObject = new GLRectangle(renderer.objCount+1, ...shaders, gl);
+            newObject.Origin(sm.mouseX, sm.mouseY);
+            renderer.addObject(newObject);
+        } else if (sm.createTriangle) {
+            const newObject = new GLTriangle(renderer.objCount+1, ...shaders, gl);
+            newObject.Origin(sm.mouseX, sm.mouseY);
+            renderer.addObject(newObject);
         } else {
             sm.select(sm.hoverObjectId)
             document.querySelector('canvas').style.cursor = "grabbing";
             sm.selectObjectToDragId = sm.hoverObjectId;
             sm.mousedown = true;
         }
-
     }
 
     document.onmouseup = function() {
@@ -77,13 +70,26 @@ function eventsListen(renderer, sm, gl, shaders) {
         })
 
     document.querySelector('#create-square').onclick = (e) => {
-        sm.createRectangle = true;
-        console.log("create rectangle button")
+        if (sm.createRectangle) {
+            document.querySelector('#create-square').style.backgroundColor = 'rgb(180, 180, 180)';
+            sm.createRectangle = false;
+        } else {
+            document.querySelector('#create-square').style.backgroundColor = 'red';
+            sm.createRectangle = true;
+            sm.createTriangle = false;
+            sm.createLine = false;
+        }
     }
     document.querySelector('#create-triangle').onclick = (e) => {
-        const newObject = new GLTriangle(renderer.objCount+1, ...shaders, gl);
-        newObject.Origin(700, 400);
-        newObject.Scale(10, 10);
-        renderer.addObject(newObject);
+        
+        if (sm.createTriangle) {
+            document.querySelector('#create-triangle').style.backgroundColor = 'rgb(180, 180, 180)';
+            sm.createTriangle = false;
+        } else {
+            document.querySelector('#create-triangle').style.backgroundColor = 'red';
+            sm.createTriangle = true;
+            sm.createRectangle = false;
+            sm.createLine = false;
+        }
     }
 }

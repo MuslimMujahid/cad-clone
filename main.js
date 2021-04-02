@@ -26,20 +26,6 @@ async function main() {
     renderer = new Renderer(gl, objShader, selShader, SVGMaskElement);
     eventsListen(renderer, sm, gl, [objShader, selShader]);
 
-    // try to to draw an object
-    // do this if you want to draw an object
-    const square = new GLObject(renderer.objCount+1, objShader, selShader, gl);
-    square.Origin(100, 100);
-    square.Translate(200, 400);
-    square.Scale(10, 10);
-    renderer.addObject(square);
-
-    const square2 = new GLObject(renderer.objCount+1, objShader, selShader, gl);
-    square2.Origin(50, 50);
-    square2.Translate(200, 200);
-    square2.Scale(10, 10);
-    renderer.addObject(square2);
-
     // defining texture buffer
     const texBuf = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texBuf);
