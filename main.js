@@ -5,9 +5,7 @@ const gl = canvas.getContext('webgl');
 const sm = new StateManager();
 const shader = new Shader(gl);
 var color = [0.6,0.6,0.6];
-
 var renderer;
-
 var formLoadProject = document.getElementById("form-load-project");
 
 async function main() {
@@ -18,6 +16,14 @@ async function main() {
         sm.mouseX = e.clientX * gl.canvas.width / canvas.clientWidth;  
         sm.mouseY = gl.canvas.height - e.clientY * gl.canvas.height / canvas.clientHeight - 1;  
     };
+
+    canvas.onclick = function(e) {
+        sm.prevMouseX = sm.mouseX;
+        sm.prevMouseY = sm.mouseY;
+        sm.mouseX = e.clientX * gl.canvas.width / canvas.clientWidth;  
+        sm.mouseY = gl.canvas.height - e.clientY * gl.canvas.height / canvas.clientHeight - 1;  
+        sm.select(sm.hoverObjectId)
+    }
 
     // main shader
     const vertShader = await loadShader("shaders/vertShader.glsl", gl.VERTEX_SHADER, gl);
@@ -32,7 +38,8 @@ async function main() {
     const selShader = shader.program(selVertShader, selFragShader);
 
     // create renderer
-    const renderer = new Renderer(gl, objShader, selShader, SVGMaskElement);
+    renderer = new Renderer(gl, objShader, selShader, SVGMaskElement);
+    eventsListen(renderer, sm);
 
     // try to to draw an object
     // do this if you want to draw an object

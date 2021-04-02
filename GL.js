@@ -17,6 +17,10 @@ class GLObject {
         this.vertexArray = polygonTriangularity(arr);
     }
 
+    setColor(x, y, z) {
+        this.color = [x, y, z, 1]
+    }
+
     Origin(x, y) {
         const initialSize = 20;
         const shape = [

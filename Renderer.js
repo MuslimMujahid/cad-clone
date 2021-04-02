@@ -19,6 +19,10 @@ class Renderer {
         this.objList = [];
         this.count = 0;
     }
+    
+    selectObjectById(id) {
+        return this.objList.find(obj => obj.id === id);
+    }
 
     renderTexture() {
         for (const obj of this.objList) {

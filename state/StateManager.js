@@ -19,6 +19,9 @@ class StateManager {
     }
 
     select(objectId) {
-        this.selectedObjectId = this.hoverObjectId;
+        if (objectId > 0) {
+            this.selectedObjectId = this.hoverObjectId;
+            console.log(`select object ${objectId}`)
+        }
     }
 }
