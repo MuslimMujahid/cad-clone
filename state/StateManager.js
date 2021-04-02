@@ -3,6 +3,7 @@ class StateManager {
         this.state = stateType.SELECT;
         this.hoverObjectId = null;
         this.selectedObjectId = null;
+        this.selectObjectToDragId = null;
         this.mouseX = 0;
         this.mouseY = 0;
         this.prevMouseX = 0;
@@ -10,6 +11,7 @@ class StateManager {
         this.color = null;
 
         // mouse ever
+        this.hold = false;
         this.mousedown = false;
         this.hold = false;
     } 

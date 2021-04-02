@@ -24,7 +24,7 @@ async function main() {
 
     // create renderer
     renderer = new Renderer(gl, objShader, selShader, SVGMaskElement);
-    eventsListen(renderer, sm);
+    eventsListen(renderer, sm, gl, [objShader, selShader]);
 
     // try to to draw an object
     // do this if you want to draw an object

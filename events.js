@@ -1,5 +1,5 @@
 
-function eventsListen(renderer, sm) {
+function eventsListen(renderer, sm, gl, shaders) {
     
     function setColor(color){
         console.log("set color")
@@ -25,12 +25,11 @@ function eventsListen(renderer, sm) {
         sm.prevMouseY = sm.mouseY;
         sm.mouseX = e.clientX * gl.canvas.width / canvas.clientWidth;  
         sm.mouseY = gl.canvas.height - e.clientY * gl.canvas.height / canvas.clientHeight - 1;  
-
         if (sm.mousedown) {
-            if (sm.selectObjectById !== null) {
+            if (sm.selectObjectToDragId !== null) {
                 const moveX = sm.mouseX-sm.prevMouseX;
                 const moveY = sm.mouseY-sm.prevMouseY;
-                const object = renderer.selectObjectById(sm.selectedObjectId);
+                const object = renderer.selectObjectById(sm.selectObjectToDragId);
                 console.log("move object");
                 object.Translate(moveX, moveY);
             }
@@ -46,11 +45,20 @@ function eventsListen(renderer, sm) {
     }
 
     document.onmousedown = function() {
+        document.querySelector('canvas').style.cursor = "grab";
+        sm.selectObjectToDragId = sm.hoverObjectId;
         sm.mousedown = true;
     }
 
     document.onmouseup = function() {
-        sm.mousedown = false;
+        document.querySelector('canvas').style.cursor = "context-menu";
+        
+        if (sm.mousedown) {
+            if (sm.selectObjectToDragId !== null) {
+                sm.selectObjectToDragId = null;
+            }
+            sm.mousedown = false;
+        }
     }
 
     document
@@ -61,5 +69,10 @@ function eventsListen(renderer, sm) {
             })
         })
 
-    
+    document.querySelector('#create-square').onclick = (e) => {
+        const newObject = new GLObject(renderer.objCount+1, ...shaders, gl);
+        newObject.Origin(700, 400);
+        newObject.Scale(10, 10);
+        renderer.addObject(newObject);
+    }
 }
