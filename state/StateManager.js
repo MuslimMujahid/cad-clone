@@ -8,6 +8,10 @@ class StateManager {
         this.prevMouseX = 0;
         this.prevMouseY = 0;
         this.color = null;
+
+        // mouse ever
+        this.mousedown = false;
+        this.hold = false;
     } 
 
     setState(state) {

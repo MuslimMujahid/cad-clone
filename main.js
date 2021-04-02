@@ -10,21 +10,6 @@ var formLoadProject = document.getElementById("form-load-project");
 
 async function main() {
 
-    canvas.onmousemove = function(e) {
-        sm.prevMouseX = sm.mouseX;
-        sm.prevMouseY = sm.mouseY;
-        sm.mouseX = e.clientX * gl.canvas.width / canvas.clientWidth;  
-        sm.mouseY = gl.canvas.height - e.clientY * gl.canvas.height / canvas.clientHeight - 1;  
-    };
-
-    canvas.onclick = function(e) {
-        sm.prevMouseX = sm.mouseX;
-        sm.prevMouseY = sm.mouseY;
-        sm.mouseX = e.clientX * gl.canvas.width / canvas.clientWidth;  
-        sm.mouseY = gl.canvas.height - e.clientY * gl.canvas.height / canvas.clientHeight - 1;  
-        sm.select(sm.hoverObjectId)
-    }
-
     // main shader
     const vertShader = await loadShader("shaders/vertShader.glsl", gl.VERTEX_SHADER, gl);
     const fragShader = await loadShader("shaders/fragShader.glsl", gl.FRAGMENT_SHADER, gl);

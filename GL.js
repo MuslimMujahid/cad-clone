@@ -7,9 +7,11 @@ class GLObject {
         this.gl = gl;
         this.color = [0.2, 0.1, 0.5, 1];
 
+        // projection values
+        this.scale = [1, 1]
+        this.translate = [0, 0]
+
         // projection matrix
-        this.matTranslation = Identity(3);
-        this.negMatTranslation = Identity(3);
         this.matScale = Identity(3);
     }
 
@@ -34,11 +36,8 @@ class GLObject {
     } 
 
     Translate(dx, dy) {
-        this.matTranslation = reshape([
-            1, 0, 0,
-            0, 1, 0,
-            dx, dy, 1
-        ], [3, 3])
+        this.translate[0] += dx;
+        this.translate[1] += dy;
     }
 
     Scale(dx, dy) {
@@ -68,7 +67,14 @@ class GLObject {
             0, 1, 0,
             -ox, -oy, 1
         ], [3,3])
-        this.projMatrix = matmulMany(negOriginMat, this.matScale, originMat, this.matTranslation);
+
+        const [tx, ty] = this.translate;
+        const matTranslation = reshape([
+            1, 0, 0,
+            0, 1, 0,
+            tx, ty, 1
+        ], [3, 3])
+        this.projMatrix = matmulMany(negOriginMat, this.matScale, originMat, matTranslation);
     }
 
     draw() {

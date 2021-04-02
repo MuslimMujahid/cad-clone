@@ -19,7 +19,39 @@ function eventsListen(renderer, sm) {
             b = parseInt(x[2].slice(0,x[2].length-1));
         return [r,g,b]
     }
-    console.log(renderer)
+
+    document.querySelector('canvas').onmousemove = function(e) {
+        sm.prevMouseX = sm.mouseX;
+        sm.prevMouseY = sm.mouseY;
+        sm.mouseX = e.clientX * gl.canvas.width / canvas.clientWidth;  
+        sm.mouseY = gl.canvas.height - e.clientY * gl.canvas.height / canvas.clientHeight - 1;  
+
+        if (sm.mousedown) {
+            if (sm.selectObjectById !== null) {
+                const moveX = sm.mouseX-sm.prevMouseX;
+                const moveY = sm.mouseY-sm.prevMouseY;
+                const object = renderer.selectObjectById(sm.selectedObjectId);
+                console.log("move object");
+                object.Translate(moveX, moveY);
+            }
+        }
+    };
+
+    document.querySelector('canvas').onmousedown = function(e) {
+        sm.prevMouseX = sm.mouseX;
+        sm.prevMouseY = sm.mouseY;
+        sm.mouseX = e.clientX * gl.canvas.width / canvas.clientWidth;  
+        sm.mouseY = gl.canvas.height - e.clientY * gl.canvas.height / canvas.clientHeight - 1;  
+        sm.select(sm.hoverObjectId)
+    }
+
+    document.onmousedown = function() {
+        sm.mousedown = true;
+    }
+
+    document.onmouseup = function() {
+        sm.mousedown = false;
+    }
 
     document
         .querySelectorAll('.color')
@@ -28,4 +60,6 @@ function eventsListen(renderer, sm) {
                 setColor(getColor(e.target.style.backgroundColor))
             })
         })
+
+    
 }
