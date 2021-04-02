@@ -145,6 +145,7 @@ class GLObject {
 class GLRectangle extends GLObject {
     constructor(id, shader, selShader, gl) {
         super(id, shader, selShader, gl);
+        this.type = "rectangle";
     }
 
     Origin(x, y) {
@@ -163,6 +164,7 @@ class GLRectangle extends GLObject {
 class GLTriangle extends GLObject {
     constructor(id, shader, selShader, gl) {
         super(id, shader, selShader, gl);
+        this.type = "triangle";
     }
 
     Origin(x, y) {

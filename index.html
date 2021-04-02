@@ -21,8 +21,11 @@
             <div class='container-2'>
                 <div class='interface'>
                     <div class='tools'>
-                        <button class = "load-button" onclick="saveData()">Save project</button>
-                        <button class = "load-button" onclick="loadData()">Load project</button>
+                        <form enctype="multipart/form-data">
+                            <input type="file" id="import-file">
+                            <button id="load-button">Load project</button>
+                        </form>
+                        <button id="save-button">Save project</button>
                     </div>
                     <div class='tools'>
                         <button class = "drag-button">Drag</button>
@@ -125,7 +128,7 @@
                 <canvas id="main-canvas" width='1024' height='600'></canvas>
             </div>
             <div class='project-title'>
-                <input value='untitled' placeholder='Untitled'>
+                <input value='untitled' placeholder='Untitled' id="file-name">
             </div>
       </div>
         <div id="dynamic-parent" hidden></div>

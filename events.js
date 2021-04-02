@@ -92,4 +92,56 @@ function eventsListen(renderer, sm, gl, shaders) {
             sm.createLine = false;
         }
     }
+
+    // save and load
+    document.querySelector('#save-button').onclick = () => {
+        const name = document.getElementById('file-name').value;
+        console.log(name);
+        let objects = []
+        renderer.objList.forEach(obj => {
+            objInfo = {
+                "vertexArray": obj.vertexArray,
+                "color": obj.color,
+                "origin": obj.origin,
+                "translate": obj.translate,
+                "scale": obj.scale,
+                "type": obj.type
+            }
+            objects.push(objInfo)
+        })
+        const data = {"data": objects}
+        const json = JSON.stringify(data);
+        let dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(json);
+
+        let linkElement = document.createElement("a");
+        linkElement.setAttribute("href", dataUri);
+        linkElement.setAttribute("download", `${name}.json`);
+        linkElement.click();
+    }
+
+    document.querySelector('#load-button').onclick = async (e) => {
+        e.preventDefault();
+        const file = document.getElementById('import-file').files[0];
+        const data = JSON.parse(await file.text()).data;
+
+        renderer.objCount = 0;
+        renderer.objList = [];
+
+        data.forEach(item => {
+            let newObject;
+            console.log(item.type);
+            if (item.type == "rectangle") {
+                newObject = new GLRectangle(renderer.objCount+1, ...shaders, gl);
+            } else if (item.type == "triangle") {
+                newObject = new GLTriangle(renderer.objCount+1, ...shaders, gl);
+            }
+
+            newObject.Origin(item.origin[0], item.origin[1]);
+            newObject.vertexArray = item.vertexArray;
+            newObject.color = item.color;
+            newObject.translate = item.translate;
+            newObject.type = item.type;
+            renderer.addObject(newObject);
+        })
+    }
 }
