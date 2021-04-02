@@ -80,7 +80,6 @@ class GLObject {
         ], [3, 3]);
         matScale = matmulMany(negOriginMat, matScale, originMat)
         this.projMatrix = matmulMany(matScale, matTranslation);
-        console.log(this.projMatrix)
     }
 
     draw() {
@@ -176,5 +175,83 @@ class GLTriangle extends GLObject {
         ]
         this.vertexArray = polygonTriangularity(shape);
         this.origin = [x, y]
+    }
+}
+
+class GLLine extends GLObject {
+    constructor(id, shader, selShader, gl) {
+        super(id, shader, selShader, gl);
+        this.type = "line";
+    }
+
+    draw() {
+        const gl = this.gl;
+
+        // use program
+        gl.useProgram(this.shader);
+        // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+        // get variables
+        const a_pos = gl.getAttribLocation(this.shader, "a_pos");
+        const uniformPos = gl.getUniformLocation(this.shader, 'u_proj_mat');
+        const u_resolution = gl.getUniformLocation(this.shader, 'u_resolution');
+        // this.calcProjectionMatrix();
+        // const projectionMat = flat(this.projMatrix);
+        const projectionMat = Identity(3);
+        const fColorLocation = gl.getUniformLocation(this.shader, "fColor");
+        
+        // set values
+        gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(a_pos);
+        gl.uniformMatrix3fv(uniformPos, false, flat(projectionMat));
+        gl.uniform2f(u_resolution, gl.canvas.width, gl.canvas.height);
+        gl.uniform4fv(fColorLocation, this.color);
+
+        // draw object
+        gl.drawArrays(gl.LINE_STRIP, 0, this.vertexArray.length/2);
+    }
+
+    drawSelect() {
+        const gl = this.gl;
+
+        // use program
+        gl.useProgram(this.selShader);
+        // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+        // get variables
+        const a_pos = gl.getAttribLocation(this.selShader, "a_pos");
+        const uniformPos = gl.getUniformLocation(this.selShader, 'u_proj_mat');
+        const u_resolution = gl.getUniformLocation(this.selShader, 'u_resolution');
+        // this.calcProjectionMatrix();
+        // const projectionMat = flat(this.projMatrix);
+        const projectionMat = Identity(3);
+        const fColorLocation = gl.getUniformLocation(this.selShader, "fColor");
+        
+        // set values
+        gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(a_pos);
+        gl.uniformMatrix3fv(uniformPos, false, flat(projectionMat));
+        gl.uniform2f(u_resolution, gl.canvas.width, gl.canvas.height);
+        const uniformId = [
+            ((this.id >> 0) & 0xff) / 0xff,
+            ((this.id >> 8) & 0xff) / 0xff,
+            ((this.id >> 16) & 0xff) / 0xff,
+            ((this.id >> 24) & 0xff) / 0xff,
+        ];
+        gl.uniform4fv(fColorLocation, uniformId);
+
+        // draw object
+        gl.drawArrays(gl.LINE_STRIP, 0, this.vertexArray.length/2);
+    }
+}
+
+class GLPolygon extends GLObject {
+    constructor(id, shader, selShader, gl) {
+        super(id, shader, selShader, gl);
+        this.type = "polygon";
+    }
+
+    Origin(x, y) {
+        this.origin = [x, y];
     }
 }

@@ -19,6 +19,11 @@ class StateManager {
         this.createRectangle = false;
         this.createTriangle = false;
         this.createLine = false;
+        this.createPolygon = false;
+
+        // create line event
+        this.lineFirstPoint = true;
+        this.curLineVertexArray = []
     } 
 
     setState(state) {

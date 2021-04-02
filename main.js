@@ -26,6 +26,10 @@ async function main() {
     renderer = new Renderer(gl, objShader, selShader, SVGMaskElement);
     eventsListen(renderer, sm, gl, [objShader, selShader]);
 
+    const line = new GLLine(renderer.objCount+1, objShader, selShader, gl);
+    line.vertexArray = [100, 200, 200, 100, 100, 300];
+    renderer.addObject(line);
+
     // defining texture buffer
     const texBuf = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texBuf);
@@ -96,7 +100,6 @@ async function main() {
         gl.readPixels(sm.mouseX, sm.mouseY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, data);
         const id = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
         sm.hover(id);
-        console.log(sm.hoverObjectId)
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
